@@ -2,10 +2,7 @@ window.TrelloPowerUp.initialize({
   "card-buttons": function (t, options) {
     return [
       {
-        icon: {
-          dark: "./images/icon.png",
-          light: "./images/icon.png"
-        },
+        icon: "https://p.trellocdn.com/favicon.ico",
         text: "Project Outline",
         callback: function (t) {
           return t.popup({
