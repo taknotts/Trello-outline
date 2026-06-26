@@ -1,8 +1,21 @@
 const outline = document.getElementById("outline");
 const addButton = document.getElementById("addItem");
 
+// Our outline data
 let items = [];
 
+// Create a new outline item
+function createItem() {
+    return {
+        id: crypto.randomUUID(),
+        text: "",
+        level: 0,
+        completed: false,
+        collapsed: false
+    };
+}
+
+// Draw the outline on the screen
 function render() {
 
     outline.innerHTML = "";
@@ -12,28 +25,27 @@ function render() {
         const input = document.createElement("input");
 
         input.type = "text";
-        input.value = item.text;
         input.placeholder = "New item";
+        input.value = item.text;
 
+        // Keep the data model updated as the user types
         input.addEventListener("input", function () {
             item.text = input.value;
         });
 
+        // Press Enter to create a new item below
         input.addEventListener("keydown", function (e) {
 
             if (e.key === "Enter") {
 
                 e.preventDefault();
 
-                items.splice(index + 1, 0, {
-                    text: ""
-                });
+                items.splice(index + 1, 0, createItem());
 
                 render();
 
                 const inputs = outline.querySelectorAll("input");
                 inputs[index + 1].focus();
-
             }
 
         });
@@ -44,11 +56,10 @@ function render() {
 
 }
 
+// + Add Item button
 addButton.addEventListener("click", function () {
 
-    items.push({
-        text: ""
-    });
+    items.push(createItem());
 
     render();
 
@@ -57,4 +68,5 @@ addButton.addEventListener("click", function () {
 
 });
 
+// Draw the initial empty outline
 render();
