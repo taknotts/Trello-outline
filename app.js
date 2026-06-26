@@ -3,8 +3,8 @@ window.TrelloPowerUp.initialize({
     return [
       {
         icon: {
-          dark: "./images/icon.svg",
-          light: "./images/icon.svg"
+          dark: "./images/icon.png",
+          light: "./images/icon.png"
         },
         text: "Project Outline",
         callback: function (t) {
