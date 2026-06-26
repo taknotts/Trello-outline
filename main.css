@@ -1,29 +1,65 @@
 body{
 
-    font-family: Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
 
-    padding:15px;
+    margin:15px;
 
 }
 
-input{
+#outline{
 
-    display:block;
+    margin-bottom:15px;
 
-    width:100%;
+}
 
-    margin-bottom:8px;
+.outline-item{
 
-    padding:6px;
+    display:flex;
 
-    font-size:14px;
+    align-items:center;
 
-    box-sizing:border-box;
+    margin:4px 0;
+
+}
+
+.bullet{
+
+    width:22px;
+
+    flex-shrink:0;
+
+    font-size:16px;
+
+    text-align:center;
+
+    color:#666;
+
+}
+
+.text{
+
+    flex:1;
+
+    min-height:22px;
+
+    padding:4px 6px;
+
+    border:1px solid #ddd;
+
+    border-radius:4px;
+
+    outline:none;
+
+}
+
+.text:focus{
+
+    border-color:#0C66E4;
 
 }
 
 button{
 
-    margin-top:10px;
+    margin-top:8px;
 
 }
