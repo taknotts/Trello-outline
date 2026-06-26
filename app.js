@@ -1,17 +1,15 @@
 window.TrelloPowerUp.initialize({
-  "card-buttons": function (t, options) {
-    return [
-      {
-        icon: "https://p.trellocdn.com/favicon.ico",
-        text: "Project Outline",
-        callback: function (t) {
-          return t.popup({
-            title: "Project Outline",
-            url: "./popup.html",
-            height: 200
-          });
-        }
+  'card-back-section': function (t) {
+    return {
+      title: 'Project Outline',
+
+      icon: './images/icon.png',
+
+      content: {
+        type: 'iframe',
+        url: t.signUrl('./popup.html'),
+        height: 500
       }
-    ];
+    };
   }
 });
