@@ -1,83 +1,106 @@
+const t = window.TrelloPowerUp.iframe();
+
 const outline = document.getElementById("outline");
 const addButton = document.getElementById("addItem");
 
 let items = [];
 
-function createItem(text = ""){
-
+// Create a new outline item
+function createItem(text = "") {
     return {
-
         id: crypto.randomUUID(),
-
-        text,
-
-        level:0,
-
-        completed:false,
-
-        collapsed:false
-
+        text: text,
+        level: 0,
+        completed: false,
+        collapsed: false
     };
-
 }
 
-function bullet(level){
+// Save outline to this Trello card
+async function saveItems() {
+    try {
+        await t.set("card", "shared", "outline", items);
+    } catch (err) {
+        console.error("Error saving outline:", err);
+    }
+}
 
-    switch(level){
+// Load outline from this Trello card
+async function loadItems() {
+    try {
+        const saved = await t.get("card", "shared", "outline", []);
 
+        if (Array.isArray(saved) && saved.length > 0) {
+            items = saved;
+        } else {
+            items = [createItem()];
+        }
+
+        render();
+
+    } catch (err) {
+        console.error("Error loading outline:", err);
+
+        items = [createItem()];
+        render();
+    }
+}
+
+// Return bullet based on nesting level
+function bullet(level) {
+    switch (level) {
         case 0:
             return "●";
-
         case 1:
             return "○";
-
         case 2:
             return "◦";
-
         default:
             return "▪";
-
     }
-
 }
 
-function render(){
+// Draw outline
+function render() {
 
-    outline.innerHTML="";
+    outline.innerHTML = "";
 
-    items.forEach((item,index)=>{
+    items.forEach((item, index) => {
 
-        const row=document.createElement("div");
-        row.className="outline-item";
+        const row = document.createElement("div");
+        row.className = "outline-item";
+        row.style.marginLeft = (item.level * 24) + "px";
 
-        row.style.marginLeft=(item.level*24)+"px";
+        const dot = document.createElement("span");
+        dot.className = "bullet";
+        dot.textContent = bullet(item.level);
 
-        const dot=document.createElement("span");
-        dot.className="bullet";
-        dot.textContent=bullet(item.level);
+        const text = document.createElement("div");
+        text.className = "text";
+        text.contentEditable = true;
+        text.textContent = item.text;
 
-        const text=document.createElement("div");
-        text.className="text";
-        text.contentEditable=true;
-        text.textContent=item.text;
-
-        text.addEventListener("input",()=>{
-
-            item.text=text.textContent;
-
+        // Update text as user types
+        text.addEventListener("input", () => {
+            item.text = text.textContent;
+            saveItems();
         });
 
-        text.addEventListener("keydown",(e)=>{
+        // Enter creates new sibling
+        text.addEventListener("keydown", (e) => {
 
-            if(e.key==="Enter"){
+            if (e.key === "Enter") {
 
                 e.preventDefault();
 
-                items.splice(index+1,0,createItem());
+                items.splice(index + 1, 0, createItem());
 
                 render();
 
-                document.querySelectorAll(".text")[index+1].focus();
+                saveItems();
+
+                const rows = document.querySelectorAll(".text");
+                rows[index + 1].focus();
 
             }
 
@@ -92,16 +115,19 @@ function render(){
 
 }
 
-addButton.addEventListener("click",()=>{
+// Add Item button
+addButton.addEventListener("click", () => {
 
     items.push(createItem());
 
     render();
 
-    const rows=document.querySelectorAll(".text");
+    saveItems();
 
-    rows[rows.length-1].focus();
+    const rows = document.querySelectorAll(".text");
+    rows[rows.length - 1].focus();
 
 });
 
-render();
+// Load saved outline
+loadItems();
