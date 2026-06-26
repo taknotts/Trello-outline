@@ -89,22 +89,58 @@ function render() {
         // Enter creates new sibling
         text.addEventListener("keydown", (e) => {
 
-            if (e.key === "Enter") {
+    // TAB = indent/outdent
+if (e.key === "Tab") {
 
-                e.preventDefault();
+    e.preventDefault();
 
-                items.splice(index + 1, 0, createItem());
+    if (e.shiftKey) {
 
-                render();
+        // Outdent
+        item.level = Math.max(0, item.level - 1);
 
-                saveItems();
+    } else {
 
-                const rows = document.querySelectorAll(".text");
-                rows[index + 1].focus();
+        // Indent
+        if (index > 0) {
 
-            }
+            // Can't indent more than one level deeper than previous item
+            const maxLevel = items[index - 1].level + 1;
 
-        });
+            item.level = Math.min(item.level + 1, maxLevel);
+
+        }
+
+    }
+
+    render();
+    saveItems();
+
+    const rows = document.querySelectorAll(".text");
+    rows[index].focus();
+
+    return;
+}
+
+    // ENTER = new sibling
+    if (e.key === "Enter") {
+
+        e.preventDefault();
+
+        const newItem = createItem();
+        newItem.level = item.level;   // New item stays at same level
+
+        items.splice(index + 1, 0, newItem);
+
+        render();
+        saveItems();
+
+        const rows = document.querySelectorAll(".text");
+        rows[index + 1].focus();
+
+    }
+
+});
 
         row.appendChild(dot);
         row.appendChild(text);
