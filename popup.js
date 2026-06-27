@@ -121,7 +121,42 @@ if (e.key === "Tab") {
 
     return;
 }
+// BACKSPACE = delete empty item
+if (e.key === "Backspace") {
 
+    if (text.textContent.trim() === "" && items.length > 1) {
+
+        e.preventDefault();
+
+        const previousIndex = Math.max(0, index - 1);
+
+        items.splice(index, 1);
+
+        render();
+        saveItems();
+
+        const rows = document.querySelectorAll(".text");
+
+        if (rows.length > 0) {
+
+            rows[previousIndex].focus();
+
+            // Put cursor at end of previous item
+            const selection = window.getSelection();
+            const range = document.createRange();
+
+            range.selectNodeContents(rows[previousIndex]);
+            range.collapse(false);
+
+            selection.removeAllRanges();
+            selection.addRange(range);
+
+        }
+
+        return;
+    }
+
+}
     // ENTER = new sibling
     if (e.key === "Enter") {
 
